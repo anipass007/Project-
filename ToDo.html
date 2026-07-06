@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>ToDo Smart Task</title>
+    <style>
+    .dark{
+      color:white;
+      background:linear-gradient(135deg,#115,cyan);
+    }
+    .dark #info{
+      color:white;
+    }
+    .dark a{
+      color:white;
+    }
+    .dark .logo{
+      color: white ;
+    }
+    .dark span{
+      color:cyan;
+    }
+    .dark input{
+      color: white;
+      border-bottom: 2px solid white;
+      background: none;
+    }
+    .dark #tasklists{
+      color: white;
+    }
+    .dark .task{
+      background: #159;
+    }
+    body{
+      scroll-behavior: smooth;
+      font-family: Times New Roman;
+      transition: 0.3s;
+      height: 145vh;
+      background: radial-gradient(ellipse 80% 70% at 10% 15%, rgba(25,251,230,0.12), transparent 110%);
+      position:relative;
+      }
+    .navbar{
+      position: sticky;
+      top: 0;
+      border-radius: 35px;
+      background:linear-gradient(120deg,rgba(24,25,21,0.1));
+      backdrop-filter: blur(5px);
+      display: flex;
+      justify-content: space-between;
+      padding:10px;
+    }
+    input{
+      color: black;
+      border:none;
+      font-family: Times New Roman;
+      font-size: 15px;
+      outline: none;
+      background: none;
+      border-bottom: 2px solid black;
+      transition: 0.5s;
+    }
+    input:hover{
+      transform: scale(1.05);
+    }
+    button{
+      padding: 10px;
+      border:none;
+      border-radius: 25%;
+      font-family: Times New Roman;
+    }
+    .dark #modebtn, .dark #tabbtn{
+      background:#119;
+      color: white ;
+    }
+    #modebtn , #tabbtn{
+      background:#169;
+      color: white ;
+    }
+    #addbtn{
+      background:lime;
+      transition:0.4s;
+    }
+    #addbtn:active{
+      box-shadow:10px 10px 20px lime;
+      transform:scale(0.7);
+    }
+    a{
+      color:black;
+      text-decoration: none;
+    }
+    #dropdown{
+      display: none;
+      flex-direction: column;
+      border: 1px solid cyan;
+      margin: 10px;
+      border-radius:20px;
+    }
+    #tasklists{
+      display:flex;
+      flex-direction:column;
+      padding:5px;
+    }
+    .delbtn{
+      border: none;
+      background:none;
+      font-weight:bold;
+      font-size:20px;
+      transition:0.5s;
+    }
+    .task{
+      background: lightgrey;
+      border-radius:15px;
+      margin-bottom:10px;
+    }
+    .footerlogo{
+      color:red;
+      text-align: center;
+      font-family: Times New Roman;
+      font-weight: bold;
+      font-size: 24px;
+    }
+    .logo{
+      color:red;
+      font-family: Times New Roman;
+      font-weight: bold;
+      font-size: 24px;
+    }
+    span{
+      color:black;
+    }
+    #info{
+      font-weight: bold;
+      font-size: 18px;
+      border:none;
+      background: none;
+      transition:0.3s;
+    }
+    #info:active{
+      transform:scale(1.1);
+      color:red;
+      text-shadow:5px 10px 20px red;
+    }
+    #footerlinks{
+      display: flex;
+      flex-direction: column;
+      text-align: left ;
+    }
+    footer{
+      border-top: 2px solid #999;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      text-align: center;
+      padding: 15px 0;
+      flex-direction: column;
+      font-size: 17px;
+    }
+    .dark footer{
+      border-top: 2px solid cyan;
+    }
+    section{
+      scroll-behavior: smooth;
+      height:100vh;
+      overflow:auto;
+    }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation Bar-->
+    <nav class="navbar">
+      <a href="#" class="logo">Smart <span>ToDo</span></a>
+      <div class="navbtn">
+        <button id="modebtn">🌙</button>
+      <button id="tabbtn">≡</button>
+      </div>
+    </nav>
+    <!-- Hero Section -->
+    <div class="hero">
+      <button id="info">Instructions:  &#10003 </button>
+      <div id="dropdown">
+        <pre>
+      1. Enter task and "click on add button"
+      2. Most next task is shown below
+      3. Tick the checkbox for completed tasks
+      4. Click on " ❌ " button to remove the
+         task.
+      5. Last added task is your next task</pre>
+      </div>
+    </div>
+    <h3> Add Task :</h3>
+    <input type="text" id="addtask" placeholder="Add Your Task">
+    <button id="addbtn">Add</button>
+    <section>
+      <h3> Next Task :</h3>
+    <div id="nexttask"></div>
+    <h2>Tasks :</h2>
+    <div id="tasklists"></div>
+    </section>
+    <footer class="footer">
+      <div class="footerlogo">Smart <span>ToDo</span></div>
+      <div id="footerlinks">
+        <a href="#">Home</a>
+        <a href="#">Social</a>
+        <a href="#">About</a>
+        <a href="mailto: anipass2005@gmail.com">Contact</a>
+      </div>
+      <div class="footer">
+      <div>Version 1.123.0</div>
+      <div class="footertext">Made with ❤️ by King for Achievers</div>
+      <div class="footercopy">@Smart Todo - ALL RIGHT RESERVED </div>
+     </div>
+    </footer>
+    <script>
+    // ADD TASKS
+    let addtask = document.getElementById("addtask");
+    let addbtn=document.getElementById("addbtn");
+    let nexttask = document.getElementById("nexttask");
+    let tasklists = document.getElementById("tasklists");
+    let mode=document.getElementById("modebtn");
+    let info=document.getElementById("info");
+    let dropdown=document.getElementById("dropdown");
+    let tasks=JSON.parse(localStorage.getItem("tasks")) || [];
+    tasks.forEach(function(value){
+        showtask(value);
+      });
+    if(localStorage.getItem("theme")==="true"){
+        document.body.classList.add("dark");
+      }
+      // SHOW TASKS
+      function showtask(value){
+        nexttask.innerText = tasks[tasks.length-1];
+        nexttask.style.fontWeight="bold";
+        nexttask.style.fontSize="20px";
+        let tickbox=document.createElement("input");
+        tickbox.type="checkbox";
+        tickbox.id="tickbox"+Date.now();
+        let task = document.createElement("label");
+        task.className="task";
+        task.htmlFor=tickbox.id;
+        let delbtn=document.createElement("button");
+        delbtn.className="delbtn";
+        delbtn.innerText="❌";
+        task.append(tickbox);
+        task.append(value);
+        task.append(delbtn);
+        tasklists.append(task);
+        delbtn.addEventListener("click",function(){
+          navigator.vibrate(50);
+          let index=tasks.indexOf(value);
+          tasks.splice(index,1);
+          task.remove();
+          localStorage.setItem("tasks",JSON.stringify(tasks));
+        });
+        tickbox.addEventListener("click",function(){
+          navigator.vibrate(50);
+          if(tickbox.checked){
+            task.style.textDecoration="line-through ";
+            task.style.color="grey";
+          }
+          else{
+            task.style.textDecoration="none";
+            task.style.color="";
+          }
+          localStorage.setItem("tasks",JSON.stringify(tasks))
+        });
+        }
+      addbtn.addEventListener("click",function(){
+        let value=addtask.value.trim();
+        if(value){
+          navigator.vibrate(80);
+          tasks.push(value);
+           localStorage.setItem("tasks",JSON.stringify(tasks));
+        addtask.value="";
+        showtask(value);
+        }
+        });
+        let savedtheme=localStorage.getItem("theme");
+      if(savedtheme==="dark"){
+        document.body.classList.add("dark");
+        modebtn.innerText="☀️";
+      }
+        modebtn.addEventListener("click",function(){
+          navigator.vibrate(50);
+          document.body.classList.toggle("dark");
+          if(document.body.classList.contains("dark")){
+            localStorage.setItem("theme","dark");
+            modebtn.innerText="☀️";
+          }
+          else{
+            localStorage.setItem("theme","light");
+            modebtn.innerText="🌙";
+          }
+        });
+        info.addEventListener("click",function(){
+          navigator.vibrate(50);
+          if(dropdown.style.display==="block"){
+            dropdown.style.display="none";
+          }
+          else{
+            dropdown.style.display="block";
+          }
+        });
+    </script>
+  </body>
+</html>
