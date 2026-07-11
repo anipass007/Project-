@@ -10,18 +10,17 @@
     .dark #info{
       color:white;
     }
-    .dark a{
-      color:white;
-    }
-    .dark .logo{
+
+    .dark .logo , a{
       color: white ;
     }
     .dark span{
       color:cyan;
     }
-    .dark input{
+    .dark #addtask{
       color: white;
-      border-bottom: 2px solid white;
+      border: 1px solid cyan;
+      box-shadow: 2px 2px 200px lightcyan;
       background: none;
     }
     .dark #tasklists{
@@ -47,24 +46,29 @@
       justify-content: space-between;
       padding:10px;
     }
-    input{
+    #addtask{
       color: black;
       border:none;
       font-family: Times New Roman;
       font-size: 15px;
       outline: none;
-      background: none;
-      border-bottom: 2px solid black;
+      padding: 10px;
+      border: 1px solid grey;
+      box-shadow: 0px 0px 10px grey;
+      border-radius: 5px;
       transition: 0.5s;
     }
     input:hover{
-      transform: scale(1.05);
+      transform: scale(1.03);
     }
     button{
       padding: 10px;
       border:none;
       border-radius: 25%;
       font-family: Times New Roman;
+    }
+    .dark #nexttask{
+      background:#159;
     }
     .dark #modebtn, .dark #tabbtn{
       background:#119;
@@ -77,10 +81,11 @@
     #addbtn{
       background:lime;
       transition:0.4s;
+      box-shadow: 0 0 10px green;
     }
     #addbtn:active{
       box-shadow:10px 10px 20px lime;
-      transform:scale(0.7);
+      transform:scale(0.85);
     }
     a{
       color:black;
@@ -97,6 +102,19 @@
       display:flex;
       flex-direction:column;
       padding:5px;
+      gap: 10px;
+    }
+    #nexttask{
+      background: lightgrey;
+      box-shadow: 5px 5px 15px grey;
+      margin-left:5px;
+      margin-right: 5px;
+      border-radius: 10px;
+      padding: 10px ;
+      font-weight: bold;
+      font-size: 18px;
+      font-family: Times New Roman;
+      border: 1px solid lime;
     }
     .delbtn{
       border: none;
@@ -109,6 +127,9 @@
       background: lightgrey;
       border-radius:15px;
       margin-bottom:10px;
+      box-shadow: 5px 5px 15px grey;
+      border-radius: 10px;
+      border: 1px solid lime;
     }
     .footerlogo{
       color:red;
@@ -152,13 +173,22 @@
       border-top: 2px solid cyan;
     }
     section{
+      display: flex;
+      flex-direction:column;
+      gap:10px;
       scroll-behavior: smooth;
       height:100vh;
       overflow:auto;
+      padding: 5px;
+      
+    }
+    .page{
+      margin:10px;
     }
     </style>
   </head>
   <body>
+    
     <!-- Navigation Bar-->
     <nav class="navbar">
       <a href="#" class="logo">Smart <span>ToDo</span></a>
@@ -167,6 +197,7 @@
       <button id="tabbtn">≡</button>
       </div>
     </nav>
+    <div class="page">
     <!-- Hero Section -->
     <div class="hero">
       <button id="info">Instructions:  &#10003 </button>
@@ -183,13 +214,13 @@
     <h3> Add Task :</h3>
     <input type="text" id="addtask" placeholder="Add Your Task">
     <button id="addbtn">Add</button>
-    
       <h3> Next Task :</h3>
     <div id="nexttask"></div>
     <h2>Tasks :</h2>
     <section>
     <div id="tasklists"></div>
     </section>
+    </div>
     <footer class="footer">
       <div class="footerlogo">Smart <span>ToDo</span></div>
       <div class="footer">
@@ -210,32 +241,32 @@
     tasks.forEach(function(value){
         showtask(value);
       });
-    if(localStorage.getItem("theme")==="true"){
-        document.body.classList.add("dark");
-      }
       // SHOW TASKS
+      function nxtask(){
+        if(tasks.length>=1){
+          nexttask.innerText = tasks[tasks.length-1];
+        }
+        if(tasks.length==0) nexttask.innerText=" ";
+      }
       function showtask(value){
-        nexttask.innerText = tasks[tasks.length-1];
-        nexttask.style.fontWeight="bold";
-        nexttask.style.fontSize="20px";
+        nxtask();
         let tickbox=document.createElement("input");
         tickbox.type="checkbox";
-        tickbox.id="tickbox"+Date.now();
         let task = document.createElement("label");
         task.className="task";
-        task.htmlFor=tickbox.id;
         let delbtn=document.createElement("button");
         delbtn.className="delbtn";
         delbtn.innerText="❌";
         task.append(tickbox);
         task.append(value);
         task.append(delbtn);
-        tasklists.append(task);
+        tasklists.prepend(task);
         delbtn.addEventListener("click",function(){
           navigator.vibrate(50);
           let index=tasks.indexOf(value);
           tasks.splice(index,1);
           task.remove();
+          nxtask();
           localStorage.setItem("tasks",JSON.stringify(tasks));
         });
         tickbox.addEventListener("click",function(){
