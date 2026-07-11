@@ -101,6 +101,108 @@
     }
     .delbtn{
       border: none;
+   <!DOCTYPE html>
+<html>
+  <head>
+    <title>ToDo Smart Task</title>
+    <style>
+    .dark{
+      color:white;
+      background:linear-gradient(135deg,#115,cyan);
+    }
+    .dark #info{
+      color:white;
+    }
+    .dark a{
+      color:white;
+    }
+    .dark .logo{
+      color: white ;
+    }
+    .dark span{
+      color:cyan;
+    }
+    .dark input{
+      color: white;
+      border-bottom: 2px solid white;
+      background: none;
+    }
+    .dark #tasklists{
+      color: white;
+    }
+    .dark .task{
+      background: #159;
+    }
+    body{
+      scroll-behavior: smooth;
+      font-family: Times New Roman;
+      transition: 0.3s;
+      margin: 0;
+      background: radial-gradient(ellipse 80% 70% at 10% 15%, rgba(25,251,230,0.12), transparent 110%);
+      position:relative;
+      }
+    .navbar{
+      position: sticky;
+      top: 0;
+      background:linear-gradient(120deg,rgba(24,25,21,0.1));
+      backdrop-filter: blur(5px);
+      display: flex;
+      justify-content: space-between;
+      padding:10px;
+    }
+    input{
+      color: black;
+      border:none;
+      font-family: Times New Roman;
+      font-size: 15px;
+      outline: none;
+      background: none;
+      border-bottom: 2px solid black;
+      transition: 0.5s;
+    }
+    input:hover{
+      transform: scale(1.05);
+    }
+    button{
+      padding: 10px;
+      border:none;
+      border-radius: 25%;
+      font-family: Times New Roman;
+    }
+    .dark #modebtn, .dark #tabbtn{
+      background:#119;
+      color: white ;
+    }
+    #modebtn , #tabbtn{
+      background:#169;
+      color: white ;
+    }
+    #addbtn{
+      background:lime;
+      transition:0.4s;
+    }
+    #addbtn:active{
+      box-shadow:10px 10px 20px lime;
+      transform:scale(0.7);
+    }
+    a{
+      color:black;
+      text-decoration: none;
+    }
+    #dropdown{
+      display: none;
+      flex-direction: column;
+      border: 1px solid cyan;
+      margin: 10px;
+      border-radius:20px;
+    }
+    #tasklists{
+      display:flex;
+      flex-direction:column;
+      padding:5px;
+    }
+    .delbtn{
+      border: none;
       background:none;
       font-weight:bold;
       font-size:20px;
@@ -113,7 +215,7 @@
     }
     .footerlogo{
       color:red;
-      text-align: center;
+      text-align: left;
       font-family: Times New Roman;
       font-weight: bold;
       font-size: 24px;
@@ -139,17 +241,12 @@
       color:red;
       text-shadow:5px 10px 20px red;
     }
-    #footerlinks{
-      display: flex;
-      flex-direction: column;
-      text-align: left ;
-    }
     footer{
       border-top: 2px solid #999;
       left: 0;
       bottom: 0;
       width: 100%;
-      text-align: center;
+      text-align: left;
       padding: 15px 0;
       flex-direction: column;
       font-size: 17px;
@@ -189,24 +286,18 @@
     <h3> Add Task :</h3>
     <input type="text" id="addtask" placeholder="Add Your Task">
     <button id="addbtn">Add</button>
-    <section>
+    
       <h3> Next Task :</h3>
     <div id="nexttask"></div>
     <h2>Tasks :</h2>
+    <section>
     <div id="tasklists"></div>
     </section>
     <footer class="footer">
       <div class="footerlogo">Smart <span>ToDo</span></div>
-      <div id="footerlinks">
-        <a href="#">Home</a>
-        <a href="#">Social</a>
-        <a href="#">About</a>
-        <a href="mailto: anipass2005@gmail.com">Contact</a>
-      </div>
       <div class="footer">
       <div>Version 1.123.0</div>
       <div class="footertext">Made with ❤️ by King for Achievers</div>
-      <div class="footercopy">@Smart Todo - ALL RIGHT RESERVED </div>
      </div>
     </footer>
     <script>
