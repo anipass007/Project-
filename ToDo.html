@@ -1,7 +1,9 @@
-<!DOCTYPE html>
+   <!DOCTYPE html>
 <html>
   <head>
     <title>ToDo Smart Task</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Nunito:wght@400;600;700;900&display=swap" rel="stylesheet"/>
     <style>
     .dark{
       color:white;
@@ -58,8 +60,9 @@
       border-radius: 5px;
       transition: 0.5s;
     }
-    input:hover{
+    #addtask:hover{
       transform: scale(1.03);
+      border: 1px solid lime;
     }
     button{
       padding: 10px;
@@ -97,6 +100,7 @@
       border: 1px solid cyan;
       margin: 10px;
       border-radius:20px;
+      box-shadow: 0 0 10px grey;
     }
     #tasklists{
       display:flex;
@@ -148,8 +152,8 @@
       color:black;
     }
     #info{
-      font-weight: bold;
-      font-size: 18px;
+      font-size: 30px;
+      font-family: Bangers;
       border:none;
       background: none;
       transition:0.3s;
@@ -175,12 +179,15 @@
     section{
       display: flex;
       flex-direction:column;
+      border: 2px dashed lime;
       gap:10px;
+      margin: 10px;
       scroll-behavior: smooth;
       height:100vh;
       overflow:auto;
-      padding: 5px;
-      
+      padding: 15px;
+      box-shadow: 0 0 10px grey;
+      border-radius: 10px;
     }
     .page{
       margin:10px;
@@ -211,7 +218,7 @@
       5. Last added task is your next task</pre>
       </div>
     </div>
-    <h3> Add Task :</h3>
+    <h2> Add Task :</h2>
     <input type="text" id="addtask" placeholder="Add Your Task">
     <button id="addbtn">Add</button>
       <h3> Next Task :</h3>
@@ -238,15 +245,18 @@
     let info=document.getElementById("info");
     let dropdown=document.getElementById("dropdown");
     let tasks=JSON.parse(localStorage.getItem("tasks")) || [];
-    tasks.forEach(function(value){
-        showtask(value);
+    tasks.forEach(function(task){
+        showtask(task);
       });
+      if(tasks.length==0){
+        nexttask.innerText="Add Some Task 🙇";
+      }
       // SHOW TASKS
       function nxtask(){
         if(tasks.length>=1){
-          nexttask.innerText = tasks[tasks.length-1];
+          nexttask.innerText = tasks[tasks.length-1].text+" 🔏";
         }
-        if(tasks.length==0) nexttask.innerText=" ";
+        if(tasks.length==0) nexttask.innerText="Add Some Task 🙇";
       }
       function showtask(value){
         nxtask();
@@ -254,11 +264,17 @@
         tickbox.type="checkbox";
         let task = document.createElement("label");
         task.className="task";
+        if(value.completed){
+          tickbox.checked=value.completed;
+            task.style.textDecoration="line-through";
+            task.style.color="grey";
+          }
         let delbtn=document.createElement("button");
+        let index=tasks.indexOf(value);
         delbtn.className="delbtn";
         delbtn.innerText="❌";
         task.append(tickbox);
-        task.append(value);
+        task.append(value.text);
         task.append(delbtn);
         tasklists.prepend(task);
         delbtn.addEventListener("click",function(){
@@ -271,25 +287,31 @@
         });
         tickbox.addEventListener("click",function(){
           navigator.vibrate(50);
-          if(tickbox.checked){
-            task.style.textDecoration="line-through ";
+          value.completed=tickbox.checked;
+          localStorage.setItem("tasks",JSON.stringify(tasks));
+          if(value.completed){
+            task.style.textDecoration="line-through";
             task.style.color="grey";
           }
           else{
             task.style.textDecoration="none";
             task.style.color="";
           }
-          localStorage.setItem("tasks",JSON.stringify(tasks))
         });
         }
+        console.log(tasks)
       addbtn.addEventListener("click",function(){
         let value=addtask.value.trim();
         if(value){
+          let task={
+            text:value,
+            completed:false,
+          };
           navigator.vibrate(80);
-          tasks.push(value);
+          tasks.push(task);
            localStorage.setItem("tasks",JSON.stringify(tasks));
         addtask.value="";
-        showtask(value);
+        showtask(task);
         }
         });
         let savedtheme=localStorage.getItem("theme");
