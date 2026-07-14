@@ -46,6 +46,7 @@
       backdrop-filter: blur(5px);
       display: flex;
       justify-content: space-between;
+      border-bottom: 1px solid lime;
       padding:10px;
     }
     #addtask{
@@ -121,13 +122,26 @@
       border: 1px solid lime;
     }
     .delbtn{
-      border: none;
-      background:none;
+      border: groove;
+      background:rgba(215,1,25,1.0);
+      padding:5px;
+      width: 75px;
+      color: white;
+      border-radius: 7px;
+      margin-right: 4px;
       font-weight:bold;
-      font-size:20px;
+      font-size:12px;
       transition:0.5s;
     }
+    .delbtn:active{
+      transform: scale(0.85);
+      box-shadow: 0 0 5px rgba(215,1,25,1.0);
+    }
     .task{
+      display: flex;
+      justify-content: space-between;
+      height: 45px;
+      align-items: center;
       background: lightgrey;
       border-radius:15px;
       margin-bottom:10px;
@@ -179,7 +193,7 @@
     section{
       display: flex;
       flex-direction:column;
-      border: 2px dashed lime;
+      border: 2px groove lime;
       gap:10px;
       margin: 10px;
       scroll-behavior: smooth;
@@ -207,15 +221,20 @@
     <div class="page">
     <!-- Hero Section -->
     <div class="hero">
-      <button id="info">Instructions:  &#10003 </button>
+      <button id="info">Instructions: 📑</button>
       <div id="dropdown">
         <pre>
-      1. Enter task and "click on add button"
-      2. Most next task is shown below
-      3. Tick the checkbox for completed tasks
-      4. Click on " ❌ " button to remove the
-         task.
-      5. Last added task is your next task</pre>
+      1. Enter task and "click on add button".
+      
+      2. Most next task is shown below.
+      
+      3. Tick the checkbox for completed tasks.
+      
+      4. Click on "<span style="color:red;font-weight:bold">🗑️ Delete </span>" button to 
+         remove the task.
+         
+      5. Last added task is your next task.
+      </pre>
       </div>
     </div>
     <h2> Add Task :</h2>
@@ -249,14 +268,22 @@
         showtask(task);
       });
       if(tasks.length==0){
-        nexttask.innerText="Add Some Task 🙇";
+        nexttask.innerText="Add Some Tasks 🙇";
       }
       // SHOW TASKS
-      function nxtask(){
-        if(tasks.length>=1){
-          nexttask.innerText = tasks[tasks.length-1].text+" 🔏";
+    function nxtask(){
+        for(let i=tasks.length-1;i>=0;i--){
+          if(tasks[i].completed===false){
+            nexttask.innerText=tasks[i].text;
+            break;
+          }
+          else{
+            nexttask.innerText="All task completed 🎉";
+          }
         }
-        if(tasks.length==0) nexttask.innerText="Add Some Task 🙇";
+        if(tasks.length==0){
+          nexttask.innerText="Add some tasks🙇";
+        }
       }
       function showtask(value){
         nxtask();
@@ -264,17 +291,19 @@
         tickbox.type="checkbox";
         let task = document.createElement("label");
         task.className="task";
+        let taskdiv =document.createElement("div");
         if(value.completed){
           tickbox.checked=value.completed;
-            task.style.textDecoration="line-through";
-            task.style.color="grey";
+            taskdiv.style.textDecoration="line-through";
+            taskdiv.style.color="grey";
           }
         let delbtn=document.createElement("button");
         let index=tasks.indexOf(value);
         delbtn.className="delbtn";
-        delbtn.innerText="❌";
-        task.append(tickbox);
-        task.append(value.text);
+        delbtn.innerText="🗑️ Delete";
+        taskdiv.append(tickbox);
+        taskdiv.append(value.text);
+        task.append(taskdiv);
         task.append(delbtn);
         tasklists.prepend(task);
         delbtn.addEventListener("click",function(){
@@ -290,16 +319,16 @@
           value.completed=tickbox.checked;
           localStorage.setItem("tasks",JSON.stringify(tasks));
           if(value.completed){
-            task.style.textDecoration="line-through";
-            task.style.color="grey";
+            taskdiv.style.textDecoration="line-through";
+            taskdiv.style.color="grey";
           }
           else{
-            task.style.textDecoration="none";
-            task.style.color="";
+            taskdiv.style.textDecoration="none";
+            taskdiv.style.color="";
           }
+          nxtask();
         });
         }
-       
       addbtn.addEventListener("click",function(){
         let value=addtask.value.trim();
         if(value){
@@ -311,6 +340,7 @@
           tasks.push(task);
            localStorage.setItem("tasks",JSON.stringify(tasks));
         addtask.value="";
+        nxtask();
         showtask(task);
         }
         });
